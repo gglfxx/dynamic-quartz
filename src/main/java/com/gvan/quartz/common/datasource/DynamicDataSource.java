@@ -130,10 +130,8 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
                     return true;
                 }
             }
-            return false;
-        }else{
-            return false;
         }
+        return false;
     }
 
     //测试数据源连接是否有效

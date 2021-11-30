@@ -32,18 +32,20 @@ public class QuartzServiceImpl implements IQuartzService {
     public void addJob(SysTaskSchedule job, Map<String, Object> param) {
         try {
             JobKey jobKey = null;
+            Trigger trigger = null;
+            JobDetail jobDetail = null;
             //判断任务是否存在
             if(!checkJob(job)){
                 //程序初始化时判断任务是否存在并当前状态为启用
                 if("1".equals(job.getSchedule())) {
                     //创建触发器
-                    Trigger trigger = TriggerBuilder.newTrigger().withIdentity(job.getTaskNo())
+                    trigger = TriggerBuilder.newTrigger().withIdentity(job.getTaskNo())
                             .withSchedule(CronScheduleBuilder.cronSchedule(job.getTaskExpress()))
                             .startNow()
                             .build();
 
                     //创建任务
-                    JobDetail jobDetail = JobBuilder.newJob(QuartzFactory.class)
+                    jobDetail = JobBuilder.newJob(QuartzFactory.class)
                             .withIdentity(job.getTaskNo(), job.getTaskGroup())
                             .build();
 

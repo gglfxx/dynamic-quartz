@@ -66,14 +66,14 @@ public class MybatisPlusConfig {
 		return conf;
 	}
 
-	@Bean(name = "primary-db")
-	@ConfigurationProperties(prefix = "spring.datasource.druid.db1")
+	@Bean(name = "master-db")
+	@ConfigurationProperties(prefix = "spring.datasource.druid.master")
 	public DataSource db1() {
 		return DruidDataSourceBuilder.create().build();
 	}
 
 	@Bean(name = "slave-db")
-	@ConfigurationProperties(prefix = "spring.datasource.druid.db2")
+	@ConfigurationProperties(prefix = "spring.datasource.druid.slave")
 	public DataSource db2() {
 		return DruidDataSourceBuilder.create().build();
 	}
@@ -86,15 +86,15 @@ public class MybatisPlusConfig {
 	@Bean("dynamicDataSource")
 	@Qualifier("dynamicDataSource")
 	@Primary
-	public DynamicDataSource multipleDataSource(@Qualifier("primary-db") DataSource db1,
-												@Qualifier("slave-db") DataSource db2) {
+	public DynamicDataSource multipleDataSource(@Qualifier("master-db") DataSource master,
+												@Qualifier("slave-db") DataSource slave) {
 		DynamicDataSource dynamicDataSource = new DynamicDataSource();
 		Map<Object, Object> targetDataSources = new HashMap<>();
-		targetDataSources.put("primary-db", db1);
-		targetDataSources.put("slave-db", db2);
+		targetDataSources.put("master-db", master);
+		targetDataSources.put("slave-db", slave);
 		dynamicDataSource.setTargetDataSources(targetDataSources);
 		// 程序默认数据源，这个要根据程序调用数据源频次，经常把常调用的数据源作为默认
-		dynamicDataSource.setDefaultTargetDataSource(db1);
+		dynamicDataSource.setDefaultTargetDataSource(master);
 		return dynamicDataSource;
 	}
 

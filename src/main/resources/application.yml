@@ -1,19 +1,19 @@
 ##服务配合
 server:
-  port: 9091
+  port: 9001
   servlet:
-    context-path: /mergerManageQuartz
+    context-path: /dynamic-quartz
 #数据源配置
 spring:
   datasource:
     druid:
-      db1:
+      master:
         url: jdbc:oracle:thin:@192.168.1.121:1539/ORCLPDB
         username: NJSJZT_COLLECT
         password: NJSJZT_COLLECT
         driver-class-name: oracle.jdbc.OracleDriver
         type: com.alibaba.druid.pool.DruidDataSource
-        name: primary-db
+        name: master-db
         initial-size: 5
         max-active: 20
         min-idle: 5
@@ -29,7 +29,7 @@ spring:
         test-while-idle: true
         test-on-return: false
         test-on-borrow: false
-      db2:
+      slave:
         url: jdbc:oracle:thin:@192.168.1.121:1539/ORCLPDB
         username: NJSJZT
         password: NJSJZT
