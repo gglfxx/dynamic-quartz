@@ -1,0 +1,96 @@
+##服务配合
+server:
+  port: 9091
+  servlet:
+    context-path: /mergerManageQuartz
+#数据源配置
+spring:
+  datasource:
+    druid:
+      db1:
+        url: jdbc:oracle:thin:@192.168.1.121:1539/ORCLPDB
+        username: NJSJZT_COLLECT
+        password: NJSJZT_COLLECT
+        driver-class-name: oracle.jdbc.OracleDriver
+        type: com.alibaba.druid.pool.DruidDataSource
+        name: primary-db
+        initial-size: 5
+        max-active: 20
+        min-idle: 5
+        filter:
+          stat:
+            enabled: true
+            db-type: oracle
+            log-slow-sql: true
+            slow-sql-millis: 1000
+        connection-properties: druid.stat.mergeSql=true
+        max-wait: 6000
+        validation-query: SELECT 1 FROM DUAL
+        test-while-idle: true
+        test-on-return: false
+        test-on-borrow: false
+      db2:
+        url: jdbc:oracle:thin:@192.168.1.121:1539/ORCLPDB
+        username: NJSJZT
+        password: NJSJZT
+        driver-class-name: oracle.jdbc.OracleDriver
+        type: com.alibaba.druid.pool.DruidDataSource
+        name: slave-db
+        initial-size: 5
+        max-active: 20
+        min-idle: 5
+        filter:
+          stat:
+            enabled: true
+            db-type: oracle
+            log-slow-sql: true
+            slow-sql-millis: 1000
+        connection-properties: druid.stat.mergeSql=true
+        max-wait: 6000
+        validation-query: SELECT 1 FROM DUAL
+        test-while-idle: true
+        test-on-return: false
+        test-on-borrow: false
+      web-stat-filter:
+        enabled: true
+        url-pattern: /*
+        exclusions: /druid/*,*.js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico
+        session-stat-enable: true
+        session-stat-max-count: 10
+        profile-enable: true
+      stat-view-servlet:
+        enabled: true
+        url-pattern: /druid/*
+        reset-enable: false
+        login-username: druid
+        login-password: 123456
+        allow: 127.0.0.1
+        deny:
+      aop-patterns: cn.com.sparknet.manage.aop.*
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+    # 设置属性命名策略,对应jackson下PropertyNamingStrategy中的常量值，SNAKE_CASE-返回的json驼峰式转下划线，json body下划线传到后端自动转驼峰式
+    property-naming-strategy: SNAKE_CASE
+    # 当地时区
+    locale: zh
+    default-property-inclusion: NON_NULL #不为空的属性才会序列化,具体属性可看JsonInclude.Include
+#mybatis-plus配置 cn.com.sparknet.merger.web.dao
+mybatis-plus:
+  mapper-locations: classpath*:com/gvan/quartz/web/dao/mapper/*.xml
+  #实体扫描，多个package用逗号或者分号分隔
+  type-aliases-package: com.gvan.quartz.web.entity
+  global-config:
+    #mybatis-plus 3.0+判空
+    db-config:
+       id-type: AUTO
+   #   select-strategy: not_null
+   #   insert-strategy: not_null
+   #  update-strategy: not_null
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    call-setters-on-nulls: true
+    map-underscore-to-camel-case: true
+    jdbc-type-for-null: 'null'
+logging:
+  config: classpath:log4j2.xml
