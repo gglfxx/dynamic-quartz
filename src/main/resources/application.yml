@@ -66,7 +66,7 @@ spring:
         login-password: 123456
         allow: 127.0.0.1
         deny:
-      aop-patterns: cn.com.sparknet.manage.aop.*
+      aop-patterns:  com.gvan.quartz.common.aop.*
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
